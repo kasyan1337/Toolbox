@@ -1,11 +1,9 @@
 import os
 import sys
 import argparse
+import re
 import whisper
 import ffmpeg
-import os
-import certifi
-os.environ["SSL_CERT_FILE"] = certifi.where()
 
 def format_timestamp(seconds):
     hours = int(seconds // 3600)
@@ -44,9 +42,11 @@ def process_video(video_path, output_dir, model, language, timestamps, temp_dir)
         print(f"Subtitles with timestamps saved to '{output_file}'.")
     else:
         text = result["text"]
+        sentences = re.split(r'(?<=[.!?])\s+', text)
+        formatted_text = "\n".join(sentence.strip() for sentence in sentences if sentence.strip())
         output_file = os.path.join(output_dir, video_basename + ".txt")
         with open(output_file, "w", encoding="utf-8") as f:
-            f.write(text)
+            f.write(formatted_text)
         print(f"Subtitles saved to '{output_file}'.")
     os.remove(temp_audio_path)
 
@@ -54,6 +54,7 @@ def main():
     parser = argparse.ArgumentParser(description="Video Subtitle Generator using Whisper")
     parser.add_argument("--language", type=str, default="en", help="Language code for transcription (default: en)")
     parser.add_argument("--timestamps", type=int, choices=[0, 1], default=0, help="Include timestamps: 1 for yes, 0 for no (default: 0)")
+    parser.add_argument("--model", type=str, default="large", help="Model size: tiny, base, small, medium, large")
     args = parser.parse_args()
     base_dir = os.path.dirname(os.path.abspath(__file__))
     input_dir = os.path.join(base_dir, "input")
@@ -67,8 +68,8 @@ def main():
     if not video_files:
         print(f"No video files found in '{input_dir}'.")
         sys.exit(0)
-    print("Loading Whisper model (largest model) ...")
-    model = whisper.load_model("large") # Change to "tiny", "base", "small", "medium", or "large" as needed
+    print(f"Loading Whisper model: ({args.model}.) ...")
+    model = whisper.load_model(args.model)
     for video_file in video_files:
         video_path = os.path.join(input_dir, video_file)
         process_video(video_path, output_dir, model, args.language, bool(args.timestamps), temp_dir)
