@@ -28,7 +28,8 @@ def docx_to_pdf(input_path: str, output_path: str):
     if platform.system() == "Windows":
         # On Windows, use COM interface (as before)
         import comtypes.client
-        word = comtypes.client.CreateObject('Word.Application')
+
+        word = comtypes.client.CreateObject("Word.Application")
         doc = word.Documents.Open(input_path)
         doc.SaveAs(output_path, FileFormat=17)  # 17 is the format ID for PDF
         doc.Close()
@@ -38,9 +39,11 @@ def docx_to_pdf(input_path: str, output_path: str):
         command = [
             "/Applications/LibreOffice.app/Contents/MacOS/soffice",
             "--headless",
-            "--convert-to", "pdf",
-            "--outdir", os.path.dirname(output_path),
-            input_path
+            "--convert-to",
+            "pdf",
+            "--outdir",
+            os.path.dirname(output_path),
+            input_path,
         ]
         result = run(command, capture_output=True, text=True)
 

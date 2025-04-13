@@ -51,8 +51,13 @@ def reset_cursor():
 def record_audio(filename):
     global audio_frames
     try:
-        stream = p.open(format=FORMAT, channels=CHANNELS, rate=RATE,
-                        input=True, frames_per_buffer=CHUNK)
+        stream = p.open(
+            format=FORMAT,
+            channels=CHANNELS,
+            rate=RATE,
+            input=True,
+            frames_per_buffer=CHUNK,
+        )
     except Exception as e:
         print("Error opening audio stream:", e)
         return
@@ -68,11 +73,11 @@ def record_audio(filename):
     stream.stop_stream()
     stream.close()
     try:
-        wf = wave.open(filename, 'wb')
+        wf = wave.open(filename, "wb")
         wf.setnchannels(CHANNELS)
         wf.setsampwidth(p.get_sample_size(FORMAT))
         wf.setframerate(RATE)
-        wf.writeframes(b''.join(audio_frames))
+        wf.writeframes(b"".join(audio_frames))
         wf.close()
     except Exception as e:
         print("Error writing audio file:", e)
@@ -102,7 +107,9 @@ def start_recording(language):
     recording = True
     stop_recording_event.clear()
     set_busy_cursor()
-    current_recording_thread = threading.Thread(target=record_audio, args=(current_audio_filename,))
+    current_recording_thread = threading.Thread(
+        target=record_audio, args=(current_audio_filename,)
+    )
     current_recording_thread.start()
     print(f"Recording started in {language}...")
 
@@ -130,7 +137,7 @@ def signal_handler(sig, frame):
 
 
 if __name__ == "__main__":
-    language = "ru" # Default language
+    language = "ru"  # Default language
     signal.signal(signal.SIGINT, signal_handler)
     signal.signal(signal.SIGTERM, signal_handler)
 

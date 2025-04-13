@@ -3,6 +3,7 @@ import pandas as pd
 import os
 import glob
 
+
 def extract_tables(db_path: str, output_dir: str):
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
@@ -19,10 +20,11 @@ def extract_tables(db_path: str, output_dir: str):
     cursor.close()
     conn.close()
 
+
 def main():
     current_dir = os.path.dirname(os.path.abspath(__file__))
-    input_dir = os.path.join(current_dir, 'input')
-    output_dir = os.path.join(current_dir, 'output_DB')
+    input_dir = os.path.join(current_dir, "input")
+    output_dir = os.path.join(current_dir, "output_DB")
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
     db_files = glob.glob(os.path.join(input_dir, "*.db"))
@@ -30,6 +32,7 @@ def main():
         print("No DB file found in the input folder.")
         return
     extract_tables(db_files[0], output_dir)
+
 
 if __name__ == "__main__":
     main()

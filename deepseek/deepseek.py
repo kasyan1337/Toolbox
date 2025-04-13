@@ -13,7 +13,7 @@ def get_next_file_number(archive_dir):
     files = os.listdir(archive_dir)
     max_num = 0
     for f in files:
-        match = re.match(r'(\d{3})_.*\.txt', f)
+        match = re.match(r"(\d{3})_.*\.txt", f)
         if match:
             num = int(match.group(1))
             if num > max_num:
@@ -76,7 +76,9 @@ def main():
 
             # Generate a response with the model.
             # Adjust max_tokens, temperature, and stop tokens as needed.
-            response = llm(prompt=prompt, max_tokens=256, temperature=0.7, stop=["User:"])
+            response = llm(
+                prompt=prompt, max_tokens=256, temperature=0.7, stop=["User:"]
+            )
 
             # Extract and print the assistant's answer.
             assistant_response = response["choices"][0]["text"].strip()

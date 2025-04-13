@@ -21,10 +21,17 @@ class TestFileConversions(unittest.TestCase):
             if os.path.isfile(file_path):
                 os.remove(file_path)
 
-    def check_conversion(self, input_file, conversion_type, expected_extension, **kwargs):
-        output_file = os.path.join(self.output_dir, f"{os.path.splitext(input_file)[0]}.{expected_extension}")
+    def check_conversion(
+        self, input_file, conversion_type, expected_extension, **kwargs
+    ):
+        output_file = os.path.join(
+            self.output_dir, f"{os.path.splitext(input_file)[0]}.{expected_extension}"
+        )
         convert_file(input_file, self.output_dir, conversion_type, **kwargs)
-        self.assertTrue(os.path.exists(output_file), f"{conversion_type} failed to create {output_file}")
+        self.assertTrue(
+            os.path.exists(output_file),
+            f"{conversion_type} failed to create {output_file}",
+        )
 
     def test_pdf_to_docx(self):
         self.check_conversion("test.pdf", "pdf_to_docx", "docx")
@@ -36,7 +43,9 @@ class TestFileConversions(unittest.TestCase):
         self.check_conversion("IMG_7440.HEIC", "heic_to_jpg", "jpg")
 
     def test_jpg_to_png(self):
-        self.check_conversion("github.jpeg", "jpg_to_png", "png", transparent_color=(255, 255, 255))
+        self.check_conversion(
+            "github.jpeg", "jpg_to_png", "png", transparent_color=(255, 255, 255)
+        )
 
     def test_png_to_jpg(self):
         self.check_conversion("github.png", "png_to_jpg", "jpg")

@@ -68,7 +68,7 @@ qr = qrcode.QRCode(
 qr.add_data(vcard_data)
 qr.make(fit=True)
 
-now = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+now = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 vcard_filename = f"{first_name}_{last_name}_{now}_internet.png"
 output_path = os.path.join(output_folder, vcard_filename)
 img_qr = qr.make_image(fill="black", back_color="white")

@@ -40,15 +40,18 @@ profile_picture_path = "images/photo_sjtu.png"
 
 notes = "Experienced procurement specialist in welding and materials testing."
 
+
 def compress_image_to_target(image_path, max_bytes=800):
     try:
         img = Image.open(image_path)
-        img.thumbnail((150, 150))  # RESIZE IMAGE TO MAX 150x150 (MAINTAINS ASPECT RATIO)
+        img.thumbnail(
+            (150, 150)
+        )  # RESIZE IMAGE TO MAX 150x150 (MAINTAINS ASPECT RATIO)
         # TRY DIFFERENT QUALITY LEVELS TO REDUCE SIZE
         for quality in [50, 40, 30, 20, 10]:
             buffer = io.BytesIO()
             img.save(buffer, format="JPEG", quality=quality)
-            encoded = base64.b64encode(buffer.getvalue()).decode('utf-8')
+            encoded = base64.b64encode(buffer.getvalue()).decode("utf-8")
             if len(encoded) <= max_bytes:
                 return encoded  # RETURN THE ENCODED IMAGE IF IT FITS THE TARGET SIZE!
         print("⚠️ Compressed image is still too large, skipping image embedding.")
@@ -56,6 +59,7 @@ def compress_image_to_target(image_path, max_bytes=800):
     except FileNotFoundError:
         print("⚠️ Profile picture not found. Skipping image embedding.")
         return None
+
 
 profile_picture_base64 = compress_image_to_target(profile_picture_path)
 
@@ -94,7 +98,7 @@ qr = qrcode.QRCode(
 qr.add_data(vcard_data)
 qr.make(fit=True)  # GENERATE THE BEST FIT, NOW THAT DATA IS SMALLER
 
-now = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+now = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 vcard_filename = f"{first_name}_{last_name}_{now}.png"
 output_path = os.path.join(output_folder, vcard_filename)
 img_qr = qr.make_image(fill="black", back_color="white")

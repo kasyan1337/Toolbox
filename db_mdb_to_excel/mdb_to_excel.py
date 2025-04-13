@@ -4,6 +4,7 @@ import os
 import glob
 import io
 
+
 def extract_tables(mdb_path: str, output_dir: str):
     result = subprocess.run(["mdb-tables", mdb_path], capture_output=True, text=True)
     if result.returncode != 0:
@@ -12,7 +13,9 @@ def extract_tables(mdb_path: str, output_dir: str):
     tables = result.stdout.strip().split()
     for table in tables:
         try:
-            csv_data = subprocess.check_output(["mdb-export", mdb_path, table], text=True)
+            csv_data = subprocess.check_output(
+                ["mdb-export", mdb_path, table], text=True
+            )
             df = pd.read_csv(io.StringIO(csv_data))
             excel_file = os.path.join(output_dir, f"{table}.xlsx")
             df.to_excel(excel_file, index=False)
@@ -20,10 +23,11 @@ def extract_tables(mdb_path: str, output_dir: str):
         except subprocess.CalledProcessError as e:
             print(f"Skipping table '{table}' due to error: {e}")
 
+
 def main():
     current_dir = os.path.dirname(os.path.abspath(__file__))
-    input_dir = os.path.join(current_dir, 'input')
-    output_dir = os.path.join(current_dir, 'output_mdb')
+    input_dir = os.path.join(current_dir, "input")
+    output_dir = os.path.join(current_dir, "output_mdb")
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
     mdb_files = glob.glob(os.path.join(input_dir, "*.mdb"))
@@ -31,6 +35,7 @@ def main():
         print("No MDB file found in the input folder.")
         return
     extract_tables(mdb_files[0], output_dir)
+
 
 if __name__ == "__main__":
     main()

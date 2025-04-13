@@ -3,7 +3,9 @@ import argparse
 import subprocess
 
 
-def burn_subtitles(video_path, subtitles_path, output_video_path, font=None, font_size=None):
+def burn_subtitles(
+    video_path, subtitles_path, output_video_path, font=None, font_size=None
+):
     vf_option = f"subtitles='{subtitles_path}'"
     if font or font_size:
         style_args = []
@@ -13,15 +15,35 @@ def burn_subtitles(video_path, subtitles_path, output_video_path, font=None, fon
             style_args.append(f"FontSize={font_size}")
         style_string = ",".join(style_args)
         vf_option = f"subtitles='{subtitles_path}':force_style='{style_string}'"
-    cmd = ["ffmpeg", "-i", video_path, "-vf", vf_option, "-c:a", "copy", output_video_path]
+    cmd = [
+        "ffmpeg",
+        "-i",
+        video_path,
+        "-vf",
+        vf_option,
+        "-c:a",
+        "copy",
+        output_video_path,
+    ]
     subprocess.run(cmd, check=True)
 
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Burn subtitles from the output folder into videos from the input folder")
-    parser.add_argument("--font", type=str, default=None, help="Optional font name for subtitles (e.g., Arial)")
-    parser.add_argument("--font_size", type=str, default=None, help="Optional font size for subtitles (e.g., 24)")
+        description="Burn subtitles from the output folder into videos from the input folder"
+    )
+    parser.add_argument(
+        "--font",
+        type=str,
+        default=None,
+        help="Optional font name for subtitles (e.g., Arial)",
+    )
+    parser.add_argument(
+        "--font_size",
+        type=str,
+        default=None,
+        help="Optional font size for subtitles (e.g., 24)",
+    )
     args = parser.parse_args()
 
     base_dir = os.path.dirname(os.path.abspath(__file__))
@@ -33,7 +55,9 @@ def main():
             os.makedirs(folder)
 
     video_extensions = (".mp4", ".mov", ".avi", ".mkv")
-    video_files = [f for f in os.listdir(input_dir) if f.lower().endswith(video_extensions)]
+    video_files = [
+        f for f in os.listdir(input_dir) if f.lower().endswith(video_extensions)
+    ]
 
     if not video_files:
         print(f"No video files found in '{input_dir}'.")
@@ -45,11 +69,19 @@ def main():
         subtitles_file = base_name + ".srt"
         subtitles_path = os.path.join(subtitles_dir, subtitles_file)
         if not os.path.exists(subtitles_path):
-            print(f"Subtitles file '{subtitles_file}' not found in '{subtitles_dir}'. Skipping '{video_file}'.")
+            print(
+                f"Subtitles file '{subtitles_file}' not found in '{subtitles_dir}'. Skipping '{video_file}'."
+            )
             continue
         output_video_path = os.path.join(output_dir, video_file)
         print(f"Burning subtitles for '{video_file}'...")
-        burn_subtitles(video_path, subtitles_path, output_video_path, font=args.font, font_size=args.font_size)
+        burn_subtitles(
+            video_path,
+            subtitles_path,
+            output_video_path,
+            font=args.font,
+            font_size=args.font_size,
+        )
         print(f"Output saved to '{output_video_path}'.")
 
 
