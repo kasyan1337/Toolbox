@@ -18,3 +18,5 @@ sacremoses
 pydub
 pdf2docx
 moviepy-editor
+pyaudio
+pyobjc

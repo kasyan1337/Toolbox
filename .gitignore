@@ -216,3 +216,8 @@ todo.txt
 /db_mdb_to_excel/input/
 /db_mdb_to_excel/output_db/
 /db_mdb_to_excel/output_mdb/
+/whisper_dictation/debug/
+/whisper_dictation/recordings_en/
+/whisper_dictation/recordings_ru/
+/whisper_dictation/recordings_sk/
+/whisper_dictation/tmp/
