@@ -34,7 +34,9 @@ def get_next_task_number(archive_subdir):
     archive_target = os.path.join(archive_dir, archive_subdir)
     existing_files = os.listdir(archive_target)
     existing_numbers = [
-        int(file.split(" - ")[0]) for file in existing_files if file.split(" - ")[0].isdigit()
+        int(file.split(" - ")[0])
+        for file in existing_files
+        if file.split(" - ")[0].isdigit()
     ]
     return max(existing_numbers, default=0) + 1
 
@@ -49,11 +51,15 @@ def get_file_order(file_list):
 
     while True:
         order_input = input("Enter the desired order of files (e.g., 3214): ")
-        if all(char.isdigit() and 1 <= int(char) <= len(file_list) for char in order_input):
+        if all(
+            char.isdigit() and 1 <= int(char) <= len(file_list) for char in order_input
+        ):
             order = [int(char) - 1 for char in order_input]
             return [file_list[i] for i in order]
         else:
-            print("Invalid input. Please ensure you use numbers corresponding to the files listed above.")
+            print(
+                "Invalid input. Please ensure you use numbers corresponding to the files listed above."
+            )
 
 
 def merge_pdfs(file_list, output_path):
@@ -116,7 +122,9 @@ def main():
     input_files = [f for f in input_files if validate_pdf(os.path.join(input_dir, f))]
 
     if not input_files:
-        print("No valid PDF files found in the input directory. Add valid files and try again.")
+        print(
+            "No valid PDF files found in the input directory. Add valid files and try again."
+        )
         return
 
     # Get custom file order from the user

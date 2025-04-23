@@ -4,7 +4,7 @@ import shutil
 import ocrmypdf
 
 
-def ocr_pdfs(input_folder, output_folder, archive_folder, language='eng'):
+def ocr_pdfs(input_folder, output_folder, archive_folder, language="eng"):
     """
     Process PDF files in the input folder using OCR and save them to the output folder.
 
@@ -20,13 +20,13 @@ def ocr_pdfs(input_folder, output_folder, archive_folder, language='eng'):
         if not os.path.exists(folder):
             os.makedirs(folder)
 
-    archive_input = os.path.join(archive_folder, 'input')
-    archive_output = os.path.join(archive_folder, 'output')
+    archive_input = os.path.join(archive_folder, "input")
+    archive_output = os.path.join(archive_folder, "output")
     os.makedirs(archive_input, exist_ok=True)
     os.makedirs(archive_output, exist_ok=True)
 
     # List all PDF files in the input folder
-    pdf_files = [f for f in os.listdir(input_folder) if f.lower().endswith('.pdf')]
+    pdf_files = [f for f in os.listdir(input_folder) if f.lower().endswith(".pdf")]
 
     if not pdf_files:
         print(f"No PDF files found in '{input_folder}'.")
@@ -55,7 +55,7 @@ def ocr_pdfs(input_folder, output_folder, archive_folder, language='eng'):
                 language=language,
                 deskew=True,
                 force_ocr=True,  # Force OCR even if the PDF has searchable text
-                progress_bar=True
+                progress_bar=True,
             )
             print(f"Saved OCR'd PDF to '{output_path}'.")
         except Exception as e:
@@ -65,9 +65,9 @@ def ocr_pdfs(input_folder, output_folder, archive_folder, language='eng'):
 if __name__ == "__main__":
     # Define the main folders
     source_folder = os.path.dirname(os.path.abspath(__file__))
-    input_folder = os.path.join(source_folder, 'input')
-    output_folder = os.path.join(source_folder, 'output')
-    archive_folder = os.path.join(source_folder, 'archive')
+    input_folder = os.path.join(source_folder, "input")
+    output_folder = os.path.join(source_folder, "output")
+    archive_folder = os.path.join(source_folder, "archive")
 
     # Language documentation
     """
@@ -87,7 +87,7 @@ if __name__ == "__main__":
     """
 
     # Set the language for OCR (default to English)
-    language = 'fin'
+    language = "fin"
 
     # Allow passing the language as a command-line argument
     if len(sys.argv) > 1:

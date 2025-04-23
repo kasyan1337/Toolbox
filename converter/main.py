@@ -1,6 +1,7 @@
 import glob
 import os
 import sys
+
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from src.audio_converter import wav_to_mp3, mp3_to_wav, m4a_to_mp3, m4a_to_wav
@@ -22,7 +23,13 @@ def get_file_stats(file_path):
     return file_size
 
 
-def batch_convert_files(input_folder: str, output_folder: str, conversion_type: str, file_extension: str, **kwargs):
+def batch_convert_files(
+    input_folder: str,
+    output_folder: str,
+    conversion_type: str,
+    file_extension: str,
+    **kwargs,
+):
     files = glob.glob(os.path.join(input_folder, f"*.{file_extension}"))
     for input_file in files:
         input_filename = os.path.basename(input_file)

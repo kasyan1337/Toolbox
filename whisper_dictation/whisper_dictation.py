@@ -17,8 +17,13 @@ try:
     print("✅ Microphone access OK")
 except Exception as e:
     import os
-    os.system("""osascript -e 'display dialog "⚠️ Mic access denied for Whisper.\n\nGo to System Settings → Privacy & Security → Microphone and enable Python." buttons {"OK"}'""")
-    os.system("""open "x-apple.systempreferences:com.apple.preference.security?Privacy_Microphone" """)
+
+    os.system(
+        """osascript -e 'display dialog "⚠️ Mic access denied for Whisper.\n\nGo to System Settings → Privacy & Security → Microphone and enable Python." buttons {"OK"}'"""
+    )
+    os.system(
+        """open "x-apple.systempreferences:com.apple.preference.security?Privacy_Microphone" """
+    )
     raise e
 
 
@@ -38,11 +43,13 @@ current_audio_filename = "temp_audio.wav"
 p = pyaudio.PyAudio()
 model = whisper.load_model("large")
 
+
 def set_busy_cursor():
     try:
         NSCursor.closedHandCursor().set()  # Use a closed-hand cursor as an indicator.
     except Exception as e:
         print("Error setting busy cursor:", e)
+
 
 def reset_cursor():
     try:
@@ -50,21 +57,25 @@ def reset_cursor():
     except Exception as e:
         print("Error resetting cursor:", e)
 
+
 def record_audio(filename):
     global audio_frames
-    stream = p.open(format=FORMAT, channels=CHANNELS, rate=RATE, input=True, frames_per_buffer=CHUNK)
+    stream = p.open(
+        format=FORMAT, channels=CHANNELS, rate=RATE, input=True, frames_per_buffer=CHUNK
+    )
     audio_frames = []
     while not stop_recording_event.is_set():
         data = stream.read(CHUNK)
         audio_frames.append(data)
     stream.stop_stream()
     stream.close()
-    wf = wave.open(filename, 'wb')
+    wf = wave.open(filename, "wb")
     wf.setnchannels(CHANNELS)
     wf.setsampwidth(p.get_sample_size(FORMAT))
     wf.setframerate(RATE)
-    wf.writeframes(b''.join(audio_frames))
+    wf.writeframes(b"".join(audio_frames))
     wf.close()
+
 
 def transcribe_and_type(audio_file, language):
     result = model.transcribe(audio_file, language=language)
@@ -72,15 +83,19 @@ def transcribe_and_type(audio_file, language):
     controller = keyboard.Controller()
     controller.type(text)
 
+
 def start_recording_thread(language):
     global recording, current_language, current_recording_thread, stop_recording_event
     recording = True
     current_language = language
     stop_recording_event.clear()
     set_busy_cursor()
-    current_recording_thread = threading.Thread(target=record_audio, args=(current_audio_filename,))
+    current_recording_thread = threading.Thread(
+        target=record_audio, args=(current_audio_filename,)
+    )
     current_recording_thread.start()
     print(f"Recording started for language: {language}")
+
 
 def stop_recording():
     global recording, current_recording_thread, current_audio_filename
@@ -93,6 +108,7 @@ def stop_recording():
         reset_cursor()
         recording = False
 
+
 def on_press(key):
     global last_key_times
     try:
@@ -100,9 +116,15 @@ def on_press(key):
             now = time.time()
             key_name = key.name
             if key_name in last_key_times and now - last_key_times[key_name] < 0.5:
-                lang = "en" if key == keyboard.Key.f1 else "sk" if key == keyboard.Key.f2 else "ru"
+                lang = (
+                    "en"
+                    if key == keyboard.Key.f1
+                    else "sk" if key == keyboard.Key.f2 else "ru"
+                )
                 if not recording:
-                    threading.Thread(target=start_recording_thread, args=(lang,)).start()
+                    threading.Thread(
+                        target=start_recording_thread, args=(lang,)
+                    ).start()
                 last_key_times[key_name] = 0
             else:
                 last_key_times[key_name] = now
@@ -111,6 +133,7 @@ def on_press(key):
                 stop_recording()
     except Exception:
         pass
+
 
 if __name__ == "__main__":
     with keyboard.Listener(on_press=on_press) as listener:
