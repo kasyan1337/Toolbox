@@ -38,7 +38,8 @@ def run(playwright: Playwright) -> None:
     time.sleep(30)
 
     # scroll list until fully loaded
-    page.evaluate("""
+    page.evaluate(
+        """
       async () => {
         const items = document.querySelectorAll('div.DynamicList__item');
         if (items.length === 0) return;
@@ -52,10 +53,12 @@ def run(playwright: Playwright) -> None:
           await new Promise(resolve => setTimeout(resolve, 500));
         }
       }
-    """)
+    """
+    )
 
     # deselect all duplicate checkboxes (keep only first of each group)
-    page.evaluate("""
+    page.evaluate(
+        """
       () => {
         const items = Array.from(document.querySelectorAll('div.DynamicList__item'));
         const groups = items.reduce((m, el) => {
@@ -72,7 +75,8 @@ def run(playwright: Playwright) -> None:
           }
         });
       }
-    """)
+    """
+    )
 
     input("Press Enter to finish…")
     context.close()
